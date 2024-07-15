@@ -23,3 +23,17 @@ def get_user(user_id: int):
         "status": 404,
         "message": "Not found."
     }
+
+
+@router.get("/delete_user")
+def delete_user(id: int):
+    if (user := Database.delete_user_by_id(id)) is not None:
+        return {
+            "status": 200,
+            "deleted_user": user
+        }
+    
+    return {
+        "status": 404,
+        "message": "Not found."
+    } 
