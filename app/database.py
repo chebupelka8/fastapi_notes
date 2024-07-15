@@ -5,6 +5,8 @@ from config import DATABASE_URL
 
 from models import UserModel, AbstractModel
 
+from typing import Optional
+
 
 class Database:
     engine = create_engine(DATABASE_URL, echo=True)  # type: ignore
@@ -16,3 +18,8 @@ class Database:
                 AbstractModel.metadata.create_all(cls.engine)  # type: ignore
 
                 session.add(user)
+    
+    @classmethod
+    def get_user_by_id(cls, id: int):
+        with Session(cls.engine) as session:
+            return session.query(UserModel).filter(UserModel.id == id).first()
