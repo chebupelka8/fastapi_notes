@@ -14,11 +14,12 @@ app = FastAPI(
 )
 
 app.include_router(user_router)
+Database.create_tables()
 
 
 @app.post("/reg")
 def register(user: User):
-    Database.add_user(UserModel(id=user.id, name=user.name))
+    Database.add_user(UserModel(user_id=user.id, name=user.name))
 
     return {
         "status": 200,

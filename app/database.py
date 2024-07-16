@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from config import DATABASE_URL
 
-from models import UserModel
+from models import UserModel, AbstractModel
 
 from typing import Optional
 
@@ -13,11 +13,15 @@ class Database:
     session = sessionmaker(engine)
 
     @classmethod
+    def create_tables(cls) -> None:
+        with cls.session():
+            AbstractModel.metadata.create_all(cls.engine)
+
+    @classmethod
     def add_user(cls, user: UserModel) -> None:
         with cls.session() as session:
             with session.begin():
                 session.add(user)
-                # AbstractModel.metadata.create_all(cls.engine)  # type: ignore
 
     @classmethod
     def delete_user_by_id(cls, id: int) -> Optional[UserModel]:
