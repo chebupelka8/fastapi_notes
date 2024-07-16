@@ -1,8 +1,8 @@
-from sqlalchemy.orm import mapped_column, Mapped, as_declarative
+from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase
 
 
-@as_declarative()
-class AbstractModel:
+# @as_declarative()
+class AbstractModel(DeclarativeBase):
     ...
 
 

@@ -18,7 +18,7 @@ app.include_router(user_router)
 
 @app.post("/reg")
 def register(user: User):
-    Database.add_user(UserModel(id=user.id, name=user.name))  # type: ignore
+    Database.add_user(UserModel(id=user.id, name=user.name))
 
     return {
         "status": 200,

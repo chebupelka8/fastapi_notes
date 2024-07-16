@@ -1,19 +1,20 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from config import DATABASE_URL
 
-from models import UserModel, AbstractModel
+from models import UserModel
 
 from typing import Optional
 
 
 class Database:
     engine = create_engine(DATABASE_URL, echo=True)  # type: ignore
+    session = sessionmaker(engine)
 
     @classmethod
     def add_user(cls, user: UserModel) -> None:
-        with Session(cls.engine) as session:
+        with cls.session() as session:
             with session.begin():
                 session.add(user)
                 # AbstractModel.metadata.create_all(cls.engine)  # type: ignore
@@ -23,7 +24,7 @@ class Database:
         if (user := cls.get_user_by_id(id)) is None:
             return
 
-        with Session(cls.engine) as session:
+        with cls.session() as session:
             with session.begin():
                 session.delete(user)
         
@@ -31,5 +32,5 @@ class Database:
     
     @classmethod
     def get_user_by_id(cls, id: int) -> Optional[UserModel]:
-        with Session(cls.engine) as session:
+        with cls.session() as session:
             return session.query(UserModel).filter(UserModel.id == id).first()
